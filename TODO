@@ -1,7 +1,5 @@
 TODO list
 =========
 
-* The function get_COMSOLd_dir() should work out what the directory is by where the mlx file is.  This function could then
-  be moved to run_comsol.mlx.
 * Which files should be general in nature (common for all users) but aren't?
 * COMSOLd should not crash if a user's completed/ directory is missing - it should create it if allowed instead.
