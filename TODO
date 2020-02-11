@@ -2,4 +2,7 @@ TODO list
 =========
 
 * Which files should be general in nature (common for all users) but aren't?
+    o derived_values.mlx
+    o get_cut_plane_fields.mlx
+    o create_fft_of_cut_plane.mlx
 * COMSOLd should not crash if a user's completed/ directory is missing - it should create it if allowed instead.
