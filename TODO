@@ -1,8 +1,18 @@
 TODO list
 =========
 
-* Which files should be general in nature (common for all users) but aren't?
+* Which files should be general in nature (common for all users) but 
+  aren't?
     o derived_values.mlx
     o get_cut_plane_fields.mlx
     o create_fft_of_cut_plane.mlx
-* COMSOLd should not crash if a user's completed/ directory is missing - it should create it if allowed instead.
+* COMSOLd should not crash if a user's completed/ directory is missing - it
+  should create it if allowed instead.
+* Create two post-processing routines: The built-in one and a user 
+  supplied one.  The built-in one:
+    o Processes each output file seperately and creates a new MATLAB file
+      for it.
+    o How should we deal with frq, ind_frq etc in the derived value 
+      output?  Perhaps we should have another field in the mph definition
+      so that when the mph definition is created automatically the user
+      only has to add lists of frq etc to the export table.
