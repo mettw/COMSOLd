@@ -1,9 +1,9 @@
-function WarnUser(fid, errorMessage)
+function ErrorUser(fid, errorMessage)
     % Write error to log file.
 	fprintf(fid, '%s\r\n', errorMessage);
     
 	% Alert user via the command window.
-	warning(errorMessage); % To command window.
+	error(errorMessage); % To command window.
     
     % popup message.
 	%uiwait(warndlg(errorMessage));
