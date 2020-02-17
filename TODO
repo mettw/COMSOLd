@@ -16,3 +16,5 @@ TODO list
       output?  Perhaps we should have another field in the mph definition
       so that when the mph definition is created automatically the user
       only has to add lists of frq etc to the export table.
+* Need a fairer way to allocate jobs.  Run through all directories and
+  order all jobs for all users by date and take the first as the job.
