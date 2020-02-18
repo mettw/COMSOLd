@@ -1,9 +1,9 @@
 function ldisp(fid, message)
     % Write to log file.
-	fprintf(fid, '%s\r\n', message);
+	fprintf(fid, [convertStringsToChars(message), '\r\n']);
     
 	% Write to console
-	disp(message); % To command window.
+	fprintf([convertStringsToChars(message) '\n']); % To command window.
     
 	
 return;
