@@ -8,7 +8,5 @@ TODO list
     o create_fft_of_cut_plane.mlx
 * COMSOLd should not crash if a user's completed/ directory is missing - it
   should create it if allowed instead.
-* Create two post-processing routines: The built-in one and a user 
-  supplied one.  The built-in one:
-    o Processes each output file seperately and creates a new MATLAB file
-      for it.
+* Create user post-processing routine.  Create general function for doing
+  FFT of cut planes.
