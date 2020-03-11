@@ -1,3 +1,5 @@
+% Like the load() function, but it also handles complex numbers.
+
 function out = loadcomplex(fname)
     out = [];
     
