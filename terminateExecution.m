@@ -1,4 +1,5 @@
 function terminateExecution
+    % Exit a programme even from within a try/catch pair.
     
     import java.awt.event.KeyEvent
     import java.lang.reflection.*
