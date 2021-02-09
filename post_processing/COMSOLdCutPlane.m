@@ -58,6 +58,9 @@ classdef COMSOLdCutPlane < handle
         relHy;
         relHz;
         
+        Poynting;
+        relPoynting;
+        
         % Which frequency are we looking at
         freq_num;
         
@@ -79,32 +82,69 @@ classdef COMSOLdCutPlane < handle
             hObj.x = cut_plane_in{1}.cut_plane.x;
             hObj.y = cut_plane_in{1}.cut_plane.y;
 
-            hObj.Ex = reshape(cut_plane_in{1}.cut_plane.ewfd_Ex, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{1}.cut_plane.ewfd_Ex, 2)]);
-            hObj.Ey = reshape(cut_plane_in{1}.cut_plane.ewfd_Ey, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{1}.cut_plane.ewfd_Ey, 2)]);
-            hObj.Ez = reshape(cut_plane_in{1}.cut_plane.ewfd_Ez, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{1}.cut_plane.ewfd_Ez, 2)]);
-            hObj.relEx = reshape(cut_plane_in{1}.cut_plane.ewfd_relEx, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{1}.cut_plane.ewfd_relEx, 2)]);
-            hObj.relEy = reshape(cut_plane_in{1}.cut_plane.ewfd_relEy, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{1}.cut_plane.ewfd_relEy, 2)]);
-            hObj.relEz = reshape(cut_plane_in{1}.cut_plane.ewfd_relEz, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{1}.cut_plane.ewfd_relEz, 2)]);
+            % Assume that the fields come in the order of x, y, z.
+            hObj.Ex = reshape(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(1))), ...
+                [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                size(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(1))), 2)]);
+            hObj.Ey = reshape(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(2))), ...
+                [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                size(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(1))), 2)]);
+            hObj.Ez = reshape(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(3))), ...
+                [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                size(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(1))), 2)]);
+            if length(cut_plane_in{1}.cut_plane.fields) == 6
+                hObj.relEx = reshape(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(4))), ...
+                    [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                    size(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(4))), 2)]);
+                hObj.relEy = reshape(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(5))), ...
+                    [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                    size(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(4))), 2)]);
+                hObj.relEz = reshape(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(6))), ...
+                    [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                    size(cut_plane_in{1}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{1}.cut_plane.fields(4))), 2)]);
+            else
+                hObj.relEx = zeros(size(hObj.Ex));
+                hObj.relEy = zeros(size(hObj.Ey));
+                hObj.relEz = zeros(size(hObj.Ez));
+            end
 
-            hObj.Hx = reshape(cut_plane_in{2}.cut_plane.ewfd_Hx, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{2}.cut_plane.ewfd_Hx, 2)]);
-            hObj.Hy = reshape(cut_plane_in{2}.cut_plane.ewfd_Hy, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{2}.cut_plane.ewfd_Hy, 2)]);
-            hObj.Hz = reshape(cut_plane_in{2}.cut_plane.ewfd_Hz, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{2}.cut_plane.ewfd_Hz, 2)]);
-            hObj.relHx = reshape(cut_plane_in{2}.cut_plane.ewfd_relHx, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{2}.cut_plane.ewfd_relHx, 2)]);
-            hObj.relHy = reshape(cut_plane_in{2}.cut_plane.ewfd_relHy, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{2}.cut_plane.ewfd_relHy, 2)]);
-            hObj.relHz = reshape(cut_plane_in{2}.cut_plane.ewfd_relHz, ...
-                [length(unique(hObj.x)) length(unique(hObj.y)) size(cut_plane_in{2}.cut_plane.ewfd_relHz, 2)]);
+            hObj.Hx = reshape(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(1))), ...
+                [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                size(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(1))), 2)]);
+            hObj.Hy = reshape(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(2))), ...
+                [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                size(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(1))), 2)]);
+            hObj.Hz = reshape(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(3))), ...
+                [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                size(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(1))), 2)]);
+            if length(cut_plane_in{1}.cut_plane.fields) == 6
+                hObj.relHx = reshape(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(4))), ...
+                    [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                    size(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(4))), 2)]);
+                hObj.relHy = reshape(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(5))), ...
+                    [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                    size(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(4))), 2)]);
+                hObj.relHz = reshape(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(6))), ...
+                    [length(unique(hObj.x)) length(unique(hObj.y)) ...
+                    size(cut_plane_in{2}.cut_plane.(matlab.lang.makeValidName(cut_plane_in{2}.cut_plane.fields(4))), 2)]);
+            else
+                hObj.relHx = zeros(size(hObj.Hx));
+                hObj.relHy = zeros(size(hObj.Hy));
+                hObj.relHz = zeros(size(hObj.Hz));
+            end
         
+            for i=1:size(hObj.Ex, 3)
+                ffex = squeeze(hObj.Ex(:,:,i));
+                ffey = squeeze(hObj.Ey(:,:,i));
+                ffhx = squeeze(hObj.Hx(:,:,i));
+                ffhy = squeeze(hObj.Hy(:,:,i));
+                hObj.Poynting(:,:,i) = real(ffex.*conj(ffhy)-ffey.*conj(ffhx))/2;
+                ffex = squeeze(hObj.relEx(:,:,i));
+                ffey = squeeze(hObj.relEy(:,:,i));
+                ffhx = squeeze(hObj.relHx(:,:,i));
+                ffhy = squeeze(hObj.relHy(:,:,i));
+                hObj.relPoynting(:,:,i) = real(ffex.*conj(ffhy)-ffey.*conj(ffhx))/2;
+            end
         end
       
         %%
@@ -204,8 +244,18 @@ classdef COMSOLdCutPlane < handle
                 end
             end
         end
+        %%
+        function out = getdx(hObj)
+            unique_x = unique(hObj.x);
+            out = abs(unique_x(1) - unique_x(2));
+        end
         
-        % Only get a field at all frequencies
+        function out = getdy(hObj)
+            unique_y = unique(hObj.y);
+            out = abs(unique_y(1) - unique_y(2));
+        end
+        
+        % Only get a field at current frequency
         function out = getField(hObj, field)
             
             switch lower(field)
@@ -233,7 +283,7 @@ classdef COMSOLdCutPlane < handle
                     out = squeeze(hObj.relHy(:,:,hObj.freq_num));
                 case "relhz"
                     out = squeeze(hObj.relHz(:,:,hObj.freq_num));
-                case "poynting"
+                case "poynting" 
                     out = squeeze(hObj.Poynting(:,:,hObj.freq_num));
                 case "relpoynting"
                     out = squeeze(hObj.relPoynting(:,:,hObj.freq_num));
@@ -242,7 +292,44 @@ classdef COMSOLdCutPlane < handle
             end
         end
         
-        % get a subsection of the field at all frequencies
+        % Only get a field at current frequency
+        function out = getFieldAllFreqs(hObj, field)
+            
+            switch lower(field)
+                case "ex"
+                    out = hObj.Ex;
+                case "ey"
+                    out = hObj.Ey;
+                case "ez"
+                    out = hObj.Ez;
+                case "relex"
+                    out = hObj.relEx;
+                case "reley"
+                    out = hObj.relEy;
+                case "relez"
+                    out = hObj.relEz;
+                case "hx"
+                    out = hObj.Hx;
+                case "hy"
+                    out = hObj.Hy;
+                case "hz"
+                    out = hObj.Hz;
+                case "relhx"
+                    out = hObj.relHx;
+                case "relhy"
+                    out = hObj.relHy;
+                case "relhz"
+                    out = hObj.relHz;
+                case "poynting" 
+                    out = hObj.Poynting;
+                case "relpoynting"
+                    out = hObj.relPoynting;
+                otherwise
+                    error("Unknown field: %s", field);
+            end
+        end
+        
+        % get a subsection of the field at current frequency
         function out = getPartField(hObj, field, x_range, y_range)
             switch lower(field)
                 case "ex"

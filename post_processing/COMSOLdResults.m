@@ -212,7 +212,7 @@ classdef COMSOLdResults < handle
                     hObj.firstStudy();
                 else
                     % else this is a single study.
-                    tmp = load(strcat(hObj.options.output_dir_final, 'derived_values'));
+                    tmp = load(strcat(hObj.options.output_dir_final, 'all_derived_values'));
                     hObj.derived_values = tmp.all_derived_values;
                     tmp = load(strcat(hObj.options.output_dir_final, 'cut_planes_tbl'));
                     hObj.cut_planes = tmp.cut_planes_tbl;
@@ -395,6 +395,8 @@ classdef COMSOLdResults < handle
             end
             
             switch lower(field)
+                case "shg"
+                    this_farfield = hObj.farfield.SHG;
                 case "sfg"
                     this_farfield = hObj.farfield.SFG;
                 case "signal"
@@ -439,8 +441,54 @@ classdef COMSOLdResults < handle
                 addpath(hObj.COMSOL_dir{i});
             end
             
+            switch lower(direction)
+                case "up"
+                    epsilon_r = sqrt(hObj.derived_values.parameters.n_air);
+                case "down"
+                    epsilon_r = sqrt(hObj.derived_values.parameters.n_sub);
+            end
+
+            % If this is a sweep then load sweep_data
+            if ~isempty(hObj.options.sweep_output_dirs)
+                out = COMSOLdFarfield(hObj.options, ...
+                    load_farfield(hObj.options.sweep_output_dirs_final(hObj.study_num), hObj.farfield, study_type, direction),...
+                     hObj.derived_values.parameters.freq*1e9,... % I use GHz
+                     ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+            else
+                out = COMSOLdFarfield(hObj.options, ...
+                    load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
+                     hObj.derived_values.parameters.freq*1e9,... % I use GHz
+                     ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+            end
+            
+            % Don't modify user's path
+            path(old_path);
+        end
+        
+        function out = getFarfieldWithBackground(hObj, study_type, direction)
+            % Were any farfields calcualted for this study?
+            if isempty(hObj.farfield)
+                error("COMSOLdResults.getFarfield(): No farfield in results.");
+            end
+            
+            % We don't want to modify the user's path, so store his value
+            old_path = path;
+            % Where to look for functions used, including user supplied
+            % functions.
+            for i=1:length(hObj.COMSOL_dir)
+                addpath(hObj.COMSOL_dir{i});
+            end
+            
+            switch lower(direction)
+                case "up"
+                    epsilon_r = sqrt(hObj.derived_values.parameters.n_air);
+                case "down"
+                    epsilon_r = sqrt(hObj.derived_values.parameters.n_sub);
+            end
+            
             out = COMSOLdFarfield(hObj.options, ...
-                load_farfield(hObj.options.sweep_output_dirs_final(hObj.study_num), hObj.farfield, study_type, direction));
+                load_farfield_Eb(hObj.options.sweep_output_dirs_final(hObj.study_num), hObj.farfield, study_type, direction),...
+                 hObj.derived_values.parameters.freq, ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
             
             % Don't modify user's path
             path(old_path);
@@ -462,7 +510,7 @@ classdef COMSOLdResults < handle
         end
         
         function out = getAllParamValues(hObj)
-            out = hObj.sweep_data(hObj.study_num, :).Variables;
+            out = hObj.sweep_data.Properties.Variables(1:hObj.getNumParams());
         end
         
         function out = getParamName(hObj, num)
