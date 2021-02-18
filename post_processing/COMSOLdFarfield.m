@@ -206,29 +206,29 @@ classdef COMSOLdFarfield < handle
                     hObj.Ey(:,:,hObj.freq_num).*conj(hObj.Hx(:,:,hObj.freq_num)))/2;
                 
                 if isfield(farfield_in, "relPoynting")
+                    hObj.relHx(:,:,hObj.freq_num) = -1i*hObj.F_relEy(:,:,hObj.freq_num)*...
+                        hObj.c*hObj.epsilon_r(hObj.freq_num)*hObj.epsilon_0;
+                    hObj.relHy(:,:,hObj.freq_num) = -1i*hObj.F_relEx(:,:,hObj.freq_num)*...
+                        hObj.c*hObj.epsilon_r(hObj.freq_num)*hObj.epsilon_0;
+                    hObj.relEx(:,:,hObj.freq_num) = 1i*hObj.F_relHy(:,:,hObj.freq_num)*...
+                        hObj.c*hObj.mu_r(hObj.freq_num)*hObj.mu_0;
+                    hObj.relEy(:,:,hObj.freq_num) = 1i*hObj.F_relHx(:,:,hObj.freq_num)*...
+                        hObj.c*hObj.mu_r(hObj.freq_num)*hObj.mu_0;
                     hObj.relPoynting(:,:,hObj.freq_num) = ...
-                        abs(hObj.relEx(:,:,hObj.freq_num).*conj(hObj.relHy(:,:,hObj.freq_num)) - ...
+                        real(hObj.relEx(:,:,hObj.freq_num).*conj(hObj.relHy(:,:,hObj.freq_num)) - ...
                         hObj.relEy(:,:,hObj.freq_num).*conj(hObj.relHx(:,:,hObj.freq_num)))/2;
-                    hObj.relHx(:,:,hObj.freq_num) = hObj.F_relEy(:,:,hObj.freq_num)*...
-                        hObj.freqs(hObj.freq_num)*hObj.epsilon_r(hObj.freq_num)*hObj.epsilon_0;
-                    hObj.relHy(:,:,hObj.freq_num) = -hObj.F_relEx(:,:,hObj.freq_num)*...
-                        hObj.freqs(hObj.freq_num)*hObj.epsilon_r(hObj.freq_num)*hObj.epsilon_0;
-                    hObj.relEx(:,:,hObj.freq_num) = -hObj.F_relHy(:,:,hObj.freq_num)*...
-                        hObj.freqs(hObj.freq_num)*hObj.mu_r(hObj.freq_num)*hObj.mu_0;
-                    hObj.relEy(:,:,hObj.freq_num) = hObj.F_relHx(:,:,hObj.freq_num)*...
-                        hObj.freqs(hObj.freq_num)*hObj.mu_r(hObj.freq_num)*hObj.mu_0;
                 end
                 if isfield(farfield_in, "Poyntingb")
-                    hObj.Ebx(:,:,hObj.freq_num) = -hObj.F_Hy(:,:,hObj.freq_num)*...
-                        hObj.freqs(hObj.freq_num)*hObj.mu_r(hObj.freq_num)*hObj.mu_0;
-                    hObj.Eby(:,:,hObj.freq_num) = hObj.F_Hx(:,:,hObj.freq_num)*...
-                        hObj.freqs(hObj.freq_num)*hObj.mu_r(hObj.freq_num)*hObj.mu_0;
-                    hObj.Hbx(:,:,hObj.freq_num) = hObj.F_Eby(:,:,hObj.freq_num)*...
-                        hObj.freqs(hObj.freq_num)*hObj.epsilon_r(hObj.freq_num)*hObj.epsilon_0;
-                    hObj.Hby(:,:,hObj.freq_num) = -hObj.F_Ebx(:,:,hObj.freq_num)*...
-                        hObj.freqs(hObj.freq_num)*hObj.epsilon_r(hObj.freq_num)*hObj.epsilon_0;
+                    hObj.Ebx(:,:,hObj.freq_num) = 1i*hObj.F_Hy(:,:,hObj.freq_num)*...
+                        hObj.c*hObj.mu_r(hObj.freq_num)*hObj.mu_0;
+                    hObj.Eby(:,:,hObj.freq_num) = 1i*hObj.F_Hx(:,:,hObj.freq_num)*...
+                        hObj.c*hObj.mu_r(hObj.freq_num)*hObj.mu_0;
+                    hObj.Hbx(:,:,hObj.freq_num) = -1i*hObj.F_Eby(:,:,hObj.freq_num)*...
+                        hObj.c*hObj.epsilon_r(hObj.freq_num)*hObj.epsilon_0;
+                    hObj.Hby(:,:,hObj.freq_num) = -1i*hObj.F_Ebx(:,:,hObj.freq_num)*...
+                        hObj.c*hObj.epsilon_r(hObj.freq_num)*hObj.epsilon_0;
                     hObj.Poyntingb(:,:,hObj.freq_num) = ...
-                        abs(hObj.Ebx(:,:,hObj.freq_num).*conj(hObj.Hby(:,:,hObj.freq_num)) - ...
+                        real(hObj.Ebx(:,:,hObj.freq_num).*conj(hObj.Hby(:,:,hObj.freq_num)) - ...
                         hObj.Eby(:,:,hObj.freq_num).*conj(hObj.Hbx(:,:,hObj.freq_num)))/2;
                 end
             end
@@ -506,7 +506,7 @@ classdef COMSOLdFarfield < handle
         
         % Get the sum of all diffraction orders for all frequencies
         function out = getPoyntingAllFreqs(hObj)
-            out = hObj.Poynting;
+            out = hObj.F_Poynting;
         end
         
         function out = getFieldAllFreqs(hObj, field)
@@ -596,34 +596,37 @@ classdef COMSOLdFarfield < handle
             zeroth_order_ind = size(hObj.Ex, 1)/2+1;
             diff_order_range = (zeroth_order_ind-max_diffraction_order:zeroth_order_ind+max_diffraction_order);
             
-            hObj.Ex = hObj.Ex(diff_order_range,diff_order_range,:);
-            hObj.Ey = hObj.Ey(diff_order_range,diff_order_range,:);
-            hObj.F_Ex = hObj.F_Ex(diff_order_range,diff_order_range,:);
-            hObj.F_Ey = hObj.F_Ey(diff_order_range,diff_order_range,:);
-            hObj.F_Ez = hObj.F_Ez(diff_order_range,diff_order_range,:);
-            hObj.relEx = hObj.relEx(diff_order_range,diff_order_range,:);
-            hObj.relEy = hObj.relEy(diff_order_range,diff_order_range,:);
-            hObj.F_relEx = hObj.F_relEx(diff_order_range,diff_order_range,:);
-            hObj.F_relEy = hObj.F_relEy(diff_order_range,diff_order_range,:);
-            hObj.F_relEz = hObj.F_relEz(diff_order_range,diff_order_range,:);
+            % We squeeze the fields in case the user requests only the
+            % zeroth order, so that two of the dimensions of the matices
+            % are not being used.
+            hObj.Ex = squeeze(hObj.Ex(diff_order_range,diff_order_range,:));
+            hObj.Ey = squeeze(hObj.Ey(diff_order_range,diff_order_range,:));
+            hObj.F_Ex = squeeze(hObj.F_Ex(diff_order_range,diff_order_range,:));
+            hObj.F_Ey = squeeze(hObj.F_Ey(diff_order_range,diff_order_range,:));
+            hObj.F_Ez = squeeze(hObj.F_Ez(diff_order_range,diff_order_range,:));
+            hObj.relEx = squeeze(hObj.relEx(diff_order_range,diff_order_range,:));
+            hObj.relEy = squeeze(hObj.relEy(diff_order_range,diff_order_range,:));
+            hObj.F_relEx = squeeze(hObj.F_relEx(diff_order_range,diff_order_range,:));
+            hObj.F_relEy = squeeze(hObj.F_relEy(diff_order_range,diff_order_range,:));
+            hObj.F_relEz = squeeze(hObj.F_relEz(diff_order_range,diff_order_range,:));
             
-            hObj.Hx = hObj.Hx(diff_order_range,diff_order_range,:);
-            hObj.Hy = hObj.Hy(diff_order_range,diff_order_range,:);
-            hObj.F_Hx = hObj.F_Hx(diff_order_range,diff_order_range,:);
-            hObj.F_Hy = hObj.F_Hy(diff_order_range,diff_order_range,:);
-            hObj.F_Hz = hObj.F_Hz(diff_order_range,diff_order_range,:);
-            hObj.relHx = hObj.relHx(diff_order_range,diff_order_range,:);
-            hObj.relHy = hObj.relHy(diff_order_range,diff_order_range,:);
-            hObj.F_relHx = hObj.F_relHx(diff_order_range,diff_order_range,:);
-            hObj.F_relHy = hObj.F_relHy(diff_order_range,diff_order_range,:);
-            hObj.F_relHz = hObj.F_relHz(diff_order_range,diff_order_range,:);
+            hObj.Hx = squeeze(hObj.Hx(diff_order_range,diff_order_range,:));
+            hObj.Hy = squeeze(hObj.Hy(diff_order_range,diff_order_range,:));
+            hObj.F_Hx = squeeze(hObj.F_Hx(diff_order_range,diff_order_range,:));
+            hObj.F_Hy = squeeze(hObj.F_Hy(diff_order_range,diff_order_range,:));
+            hObj.F_Hz = squeeze(hObj.F_Hz(diff_order_range,diff_order_range,:));
+            hObj.relHx = squeeze(hObj.relHx(diff_order_range,diff_order_range,:));
+            hObj.relHy = squeeze(hObj.relHy(diff_order_range,diff_order_range,:));
+            hObj.F_relHx = squeeze(hObj.F_relHx(diff_order_range,diff_order_range,:));
+            hObj.F_relHy = squeeze(hObj.F_relHy(diff_order_range,diff_order_range,:));
+            hObj.F_relHz = squeeze(hObj.F_relHz(diff_order_range,diff_order_range,:));
             
-            hObj.Poynting = hObj.Poynting(diff_order_range,diff_order_range,:);
-            hObj.relPoynting = hObj.relPoynting(diff_order_range,diff_order_range,:);
-            hObj.Poyntingb = hObj.Poyntingb(diff_order_range,diff_order_range,:);
-            hObj.F_Poynting = hObj.F_Poynting(diff_order_range,diff_order_range,:);
-            hObj.F_relPoynting = hObj.F_relPoynting(diff_order_range,diff_order_range,:);
-            hObj.F_Poyntingb = hObj.F_Poyntingb(diff_order_range,diff_order_range,:);
+            hObj.Poynting = squeeze(hObj.Poynting(diff_order_range,diff_order_range,:));
+            hObj.relPoynting = squeeze(hObj.relPoynting(diff_order_range,diff_order_range,:));
+            hObj.Poyntingb = squeeze(hObj.Poyntingb(diff_order_range,diff_order_range,:));
+            hObj.F_Poynting = squeeze(hObj.F_Poynting(diff_order_range,diff_order_range,:));
+            hObj.F_relPoynting = squeeze(hObj.F_relPoynting(diff_order_range,diff_order_range,:));
+            hObj.F_Poyntingb = squeeze(hObj.F_Poyntingb(diff_order_range,diff_order_range,:));
         
         end
     end

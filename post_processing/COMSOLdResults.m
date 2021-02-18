@@ -199,7 +199,11 @@ classdef COMSOLdResults < handle
                     addpath(hObj.COMSOL_dir{i});
                 end
 
+                % The job load the variable 'options'
                 eval(job);
+                if exist(strcat(options.output_dir_final, "\options.mat"), 'file') %#ok<NODEF>
+                    load(strcat(options.output_dir_final, "\options.mat"), 'options');
+                end
                 hObj.options = options;
 
                 hObj.study_num = 1;
