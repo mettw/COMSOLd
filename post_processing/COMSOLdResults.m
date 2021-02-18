@@ -201,10 +201,15 @@ classdef COMSOLdResults < handle
 
                 % The job load the variable 'options'
                 eval(job);
-                if exist(strcat(options.output_dir_final, "\options.mat"), 'file') %#ok<NODEF>
+                options_in = options; %#ok<NODEF>
+                if exist(strcat(options.output_dir_final, "\options.mat"), 'file')
                     load(strcat(options.output_dir_final, "\options.mat"), 'options');
+                    options_in.parameters = options.parameters;
+                    options_in.studies = options.studies;
+                    options_in.derived_values = options.derived_values;
+                    options_in.export = options.export;
                 end
-                hObj.options = options;
+                hObj.options = options_in;
 
                 hObj.study_num = 1;
                 hObj.stepping_through_studies = false;
