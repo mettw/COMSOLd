@@ -18,14 +18,14 @@ and make it point to results->Tables->Parameters.  In the option for a filename 
 
 4) (i) In your user directory there is a sub-directory called jobs/ which is where you put all of the job scripts that you want to run.  They are run in order of age.  If you want to run a new script before the others in the queue then put it in the jobs/priority/ directory.  All of the scripts in that directory will be run before running those in the jobs/ directory.  When a job script is selected to run it is moved to the COMSOLd/running/ directory so that you can have more than one instance of COMSOLd running without them trying to run the same script.  When the job is successfully completed the job script is moved to the jobs/completed/ directory.
 
-  (ii) In your user directory there are some support files:
-* mph_description_auto.mlx - This is a new file, but hopefully it works well.  Once COMSOLd opens the model file it will call this file (or any other you want, it is a configurable option) to create a set of tables describing the model file that allows you to describe what changes to make and what to export.
-* postpro.mlx - If the postprocessing stage (after all of the data has been exported) fails then you can use this script to rerun it for a particular job.
-* rm_mat_files.mlx - deletes all of the matlab files generated in the postprocessing stage for the job specified in the mlx file.
-* shutdown.mlx - put a copy of this in the jobs/ directory to shut down COMSOLd when it is run.
-* user_post_processing.mlx - This is my postprocessing function.  I tried to make it as general as possible, so it should work for you as well.
-* set_default_options_auto.mlx - This is where you edit the matlab tables created by mph_description_auto.mlx so that you can change parameter values and what to export (by default nothing is exported).  It would take a while to explain what is going on here.  It might be usefull to set a breakpoint at the start of the file and try playing around with the MATLAB tables so that you can get an idea of how they work.
+   (ii) In your user directory there are some support files:
+      * mph_description_auto.mlx - This is a new file, but hopefully it works well.  Once COMSOLd opens the model file it will call this file (or any other you want, it is a configurable option) to create a set of tables describing the model file that allows you to describe what changes to make and what to export.
+      * postpro.mlx - If the postprocessing stage (after all of the data has been exported) fails then you can use this script to rerun it for a particular job.
+      * rm_mat_files.mlx - deletes all of the matlab files generated in the postprocessing stage for the job specified in the mlx file.
+      * shutdown.mlx - put a copy of this in the jobs/ directory to shut down COMSOLd when it is run.
+      * user_post_processing.mlx - This is my postprocessing function.  I tried to make it as general as possible, so it should work for you as well.
+      * set_default_options_auto.mlx - This is where you edit the matlab tables created by mph_description_auto.mlx so that you can change parameter values and what to export (by default nothing is exported).  It would take a while to explain what is going on here.  It might be usefull to set a breakpoint at the start of the file and try playing around with the MATLAB tables so that you can get an idea of how they work.
 
-  (iii) In the jobs directory there is a file called example_job_script.mlx which is exactly what the name suggests. Edit the directories and names to reflect the layout of your computer.
+   (iii) In the jobs directory there is a file called example_job_script.mlx which is exactly what the name suggests. Edit the directories and names to reflect the layout of your computer.
 
 5) run the script start_comsold.mlx
