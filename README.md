@@ -28,4 +28,4 @@ and make it point to results->Tables->Parameters.  In the option for a filename 
 
    (iii) In the jobs directory there is a file called example_job_script.mlx which is exactly what the name suggests. Edit the directories and names to reflect the layout of your computer.
 
-5) run the script start_comsold.mlx
+5) run the script start_comsold.mlx in the MATLAB command line (If you try to run it by pressing the green arrow then it won't work).
