@@ -201,15 +201,16 @@ classdef COMSOLdResults < handle
 
                 % The job load the variable 'options'
                 eval(job);
-                options_in = options; %#ok<NODEF>
-                if exist(strcat(options.output_dir_final, "\options.mat"), 'file')
-                    load(strcat(options.output_dir_final, "\options.mat"), 'options');
-                    options_in.parameters = options.parameters;
-                    options_in.studies = options.studies;
-                    options_in.derived_values = options.derived_values;
-                    options_in.export = options.export;
+                %{
+                if exist(strcat(options.output_dir_final, "\options.mat"), 'file') %#ok<NODEF>
+                    load(strcat(options.output_dir_final, "\options.mat"), 'options_3');
+                    options.parameters = options_3.parameters;
+                    options.studies = options_3.studies;
+                    options.derived_values = options_3.derived_values;
+                    options.export = options_3.export;
                 end
-                hObj.options = options_in;
+                %}
+                hObj.options = options;
 
                 hObj.study_num = 1;
                 hObj.stepping_through_studies = false;
@@ -538,6 +539,13 @@ classdef COMSOLdResults < handle
         
         function out = getAllParamNames(hObj)
             out = hObj.sweep_data.Properties.VariableNames(1:hObj.getNumParams());
+        end
+        
+        function out = getParamsString(hObj)
+            out = [];
+            for i=1:hObj.getNumParams
+                out = strcat(out, hObj.getParamName(i), " = ", hObj.getParamValue(i), " ");
+            end
         end
         
         function out = isParam(hObj, name)
