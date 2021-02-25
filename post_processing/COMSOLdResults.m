@@ -137,10 +137,14 @@ classdef COMSOLdResults < handle
     % OTHER METHODS
     % -------------
     %
-    % results.getJobDir()   - Returns the directory where the data for the
-    %                         whole job is stored.
-    % results.getStudyDir() - Returns the directory where the data for the
-    %                         current study is stored.
+    % results.getJobDir()       - Returns the directory where the data for
+    %                             the whole job is stored.
+    % results.getStudyDir()     - Returns the directory where the data for
+    %                             the current study is stored.
+    % results.getParamsString() - Returns all of the parameter values for
+    %                             the current study as a sting like:
+    %                             "theta = 10[deg] width = 200[nm]"
+    %                             This is for giving titles to plots.
     %
     
     
@@ -462,12 +466,12 @@ classdef COMSOLdResults < handle
             if ~isempty(hObj.options.sweep_output_dirs)
                 out = COMSOLdFarfield(hObj.options, ...
                     load_farfield(hObj.options.sweep_output_dirs_final(hObj.study_num), hObj.farfield, study_type, direction),...
-                     hObj.derived_values.parameters.freq*1e9,... % I use GHz
+                     hObj.derived_values.parameters.freq,... 
                      ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
             else
                 out = COMSOLdFarfield(hObj.options, ...
                     load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
-                     hObj.derived_values.parameters.freq*1e9,... % I use GHz
+                     hObj.derived_values.parameters.freq,...
                      ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
             end
             
@@ -475,34 +479,6 @@ classdef COMSOLdResults < handle
             path(old_path);
         end
         
-        function out = getFarfieldWithBackground(hObj, study_type, direction)
-            % Were any farfields calcualted for this study?
-            if isempty(hObj.farfield)
-                error("COMSOLdResults.getFarfield(): No farfield in results.");
-            end
-            
-            % We don't want to modify the user's path, so store his value
-            old_path = path;
-            % Where to look for functions used, including user supplied
-            % functions.
-            for i=1:length(hObj.COMSOL_dir)
-                addpath(hObj.COMSOL_dir{i});
-            end
-            
-            switch lower(direction)
-                case "up"
-                    epsilon_r = sqrt(hObj.derived_values.parameters.n_air);
-                case "down"
-                    epsilon_r = sqrt(hObj.derived_values.parameters.n_sub);
-            end
-            
-            out = COMSOLdFarfield(hObj.options, ...
-                load_farfield_Eb(hObj.options.sweep_output_dirs_final(hObj.study_num), hObj.farfield, study_type, direction),...
-                 hObj.derived_values.parameters.freq, ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
-            
-            % Don't modify user's path
-            path(old_path);
-        end
         
         %%
         %
@@ -539,13 +515,6 @@ classdef COMSOLdResults < handle
         
         function out = getAllParamNames(hObj)
             out = hObj.sweep_data.Properties.VariableNames(1:hObj.getNumParams());
-        end
-        
-        function out = getParamsString(hObj)
-            out = [];
-            for i=1:hObj.getNumParams
-                out = strcat(out, hObj.getParamName(i), " = ", hObj.getParamValue(i), " ");
-            end
         end
         
         function out = isParam(hObj, name)
@@ -600,6 +569,13 @@ classdef COMSOLdResults < handle
         % Get the directory of the whole job
         function out = getJobDir(hObj)
             out = hObj.options.output_dir_final;
+        end
+        
+        function out = getParamsString(hObj)
+            out = [];
+            for i=1:hObj.getNumParams
+                out = strcat(out, hObj.getParamName(i), " = ", hObj.getParamValue(i), " ");
+            end
         end
         
     end

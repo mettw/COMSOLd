@@ -25,6 +25,14 @@ classdef COMSOLdCutPlane < handle
     % returns only a portion of the cut plane, with x_range and y_range
     % being indexes into the array.
     %
+    % cut_plane.getFieldAllFreqs(field) - return the field at all
+    %                                     frequencies, not just the current
+    %                                     one.
+    %
+    % cut_plane.getdx(), cut_plane.getdy() - Assuming the cut plane was
+    %                       taken over a regular grid, returns the spacing
+    %                       between each x or y value.
+    %
     
     properties (SetAccess='private')
         % where the completed job scripts are stored.

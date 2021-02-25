@@ -9,6 +9,10 @@ classdef COMSOLdFarfield < handle
     % the COMSOLdResults class you can step through the frequencies with
     % similar methods as explained in that class file.
     %
+    % farfield.gotoMaxValueFreq() - Go to that frequency for which the sum
+    %                               of the farfield Poynting vector over
+    %                               all diffraction orders is maximum.
+    %
     % Data is accessed through the getField method:
     %
     % farfield.getField("Ex")
@@ -28,6 +32,19 @@ classdef COMSOLdFarfield < handle
     % returns only a portion of the cut plane, with x_range and y_range
     % being indexes into the array.
     %
+    % farfield.trimFarfield(max_diffraction_order) - Trim off all
+    %                                   diffraction orders higher than
+    %                                   max_diffraction_order on all
+    %                                   farfields.
+    %
+    % farfield.getPoyntingAllFreqs() - returns the farfield Poynting vector
+    %                                  for all diffraction orders and all
+    %                                  frequencies, not just the current
+    %                                  frequency.
+    % farfield.getFieldAllFreqs(field) - Get a field for all frequencies.
+    %
+    % farfield.getFreq() - Get the current frequency.
+    % farfield.getAllFreqs() - get a list of all frequencies.
     
     properties (SetAccess='private')
         % where the completed job scripts are stored.
@@ -314,7 +331,7 @@ classdef COMSOLdFarfield < handle
             hObj.setFreq(hObj.numFreqs());
         end
         
-        % Move to study with maximum sum of values
+        % Move to study with maximum sum of values of the Poynting vector.
         function gotoMaxValueFreq(hObj)
             %all_freqs = squeeze(sum(sum(hObj.Poynting)));
             
