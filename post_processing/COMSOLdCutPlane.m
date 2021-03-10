@@ -81,7 +81,15 @@ classdef COMSOLdCutPlane < handle
         %
         % SETUP functions
         %
-        function hObj = COMSOLdCutPlane(options, cut_plane_in)
+        function hObj = COMSOLdCutPlane(options, cut_plane_in, varargin)
+            % Check to see if the user is setting the jobs_dir or
+            % COMSOLd_dir variables.
+            if nargin > 2 % nargin is the total num of arguments
+                hObj.jobs_dir = varargin{1};
+                if nargin > 3
+                    hObj.COMSOL_dir = varargin{2};
+                end
+            end
             
             hObj.options = options;
             hObj.freq_num = 1;

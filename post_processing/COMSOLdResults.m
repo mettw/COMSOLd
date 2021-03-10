@@ -189,7 +189,16 @@ classdef COMSOLdResults < handle
         %
         % SETUP functions
         %
-        function hObj = COMSOLdResults(job)
+        function hObj = COMSOLdResults(job, varargin)
+            % Check to see if the user is setting the jobs_dir or
+            % COMSOLd_dir variables.
+            if nargin > 1 % nargin is the total num of arguments
+                hObj.jobs_dir = varargin{1};
+                if nargin > 2
+                    hObj.COMSOL_dir = varargin{2};
+                end
+            end
+            
             % If the user wants an empty object
             if strlength(job) == 0
                 hObj.study_num = 1;

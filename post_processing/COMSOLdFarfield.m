@@ -126,7 +126,15 @@ classdef COMSOLdFarfield < handle
         %
         % SETUP functions
         %
-        function hObj = COMSOLdFarfield(options, farfield_in, freqs, mu_r, epsilon_r)
+        function hObj = COMSOLdFarfield(options, farfield_in, freqs, mu_r, epsilon_r, varargin)
+            % Check to see if the user is setting the jobs_dir or
+            % COMSOLd_dir variables.
+            if nargin > 5 % nargin is the total num of arguments
+                hObj.jobs_dir = varargin{1};
+                if nargin > 6
+                    hObj.COMSOL_dir = varargin{2};
+                end
+            end
             
             hObj.options = options;
             hObj.freq_num = 1;
