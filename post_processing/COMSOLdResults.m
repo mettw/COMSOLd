@@ -228,10 +228,18 @@ classdef COMSOLdResults < handle
                     % else this is a single study.
                     tmp = load(strcat(hObj.options.output_dir_final, 'all_derived_values'));
                     hObj.derived_values = tmp.all_derived_values;
-                    tmp = load(strcat(hObj.options.output_dir_final, 'cut_planes_tbl'));
-                    hObj.cut_planes = tmp.cut_planes_tbl;
-                    tmp = load(strcat(hObj.options.output_dir_final, 'all_farfields'));
-                    hObj.farfield = tmp.all_farfields;
+                    if exist(strcat(hObj.options.output_dir_final, 'cut_planes_tbl.mat'), 'file')
+                        tmp = load(strcat(hObj.options.output_dir_final, 'cut_planes_tbl'));
+                        hObj.cut_planes = tmp.cut_planes_tbl;
+                    else
+                        hObj.cut_planes = [];
+                    end
+                    if exist(strcat(hObj.options.output_dir_final, 'all_farfields.mat'), 'file')
+                        tmp = load(strcat(hObj.options.output_dir_final, 'all_farfields'));
+                        hObj.farfield = tmp.all_farfields;
+                    else
+                        hObj.farfield = [];
+                    end
                 end
 
                 % Don't modify the user's path
