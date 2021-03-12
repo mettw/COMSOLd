@@ -147,7 +147,10 @@ classdef COMSOLdResults < handle
     %                             This is for giving titles to plots.
     %
     
-    
+    properties
+        % Allow user to attatch random data to the object.
+        extra_data;
+    end
     
     properties (SetAccess='private')
         % where the completed job scripts are stored.
@@ -192,10 +195,14 @@ classdef COMSOLdResults < handle
         function hObj = COMSOLdResults(job, varargin)
             % Check to see if the user is setting the jobs_dir or
             % COMSOLd_dir variables.
+            sweep_num = 0;
             if nargin > 1 % nargin is the total num of arguments
                 hObj.jobs_dir = varargin{1};
                 if nargin > 2
                     hObj.COMSOL_dir = varargin{2};
+                    if nargin > 3
+                        sweep_num = varargin{3};
+                    end
                 end
             end
             
@@ -228,8 +235,20 @@ classdef COMSOLdResults < handle
                 hObj.study_num = 1;
                 hObj.stepping_through_studies = false;
 
-                % If this is a sweep then load sweep_data
+                if sweep_num ~= 0
+                    % If we are still in the middle of a sweep and only
+                    % want to load data for this study.
+                    hObj.options.output_dir = options.sweep_output_dirs(sweep_num);
+                    hObj.options.output_dir_final = options.sweep_output_dirs_final(sweep_num);
+                    hObj.options.sweep_output_dirs = '';
+                    hObj.options.sweep_output_dirs_final = '';
+                    ParameterName = "";
+                    Value = "";
+                    hObj.options.sweep = table(ParameterName, Value);
+                end    
+                
                 if ~isempty(hObj.options.sweep_output_dirs)
+                    % If this is a sweep then load sweep_data
                     tmp = load(strcat(hObj.options.output_dir_final, 'sweep_data'));
                     hObj.sweep_data = tmp.sweep_data;
                     hObj.firstStudy();
