@@ -496,7 +496,6 @@ classdef COMSOLdResults < handle
             path(old_path);
         end
         
-        
         %%
         %
         % Create subset of the results
