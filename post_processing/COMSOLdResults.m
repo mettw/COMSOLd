@@ -515,6 +515,82 @@ classdef COMSOLdResults < handle
             path(old_path);
         end
         
+        function out = getFarfieldx(hObj, study_type, direction)
+            % Were any farfields calcualted for this study?
+            if isempty(hObj.farfield)
+                error("COMSOLdResults.getFarfield(): No farfield in results.");
+            end
+            
+            % We don't want to modify the user's path, so store his value
+            old_path = path;
+            % Where to look for functions used, including user supplied
+            % functions.
+            for i=1:length(hObj.COMSOL_dir)
+                addpath(hObj.COMSOL_dir{i});
+            end
+            
+            switch lower(direction)
+                case "up"
+                    epsilon_r = sqrt(hObj.derived_values.parameters.n_air);
+                case "down"
+                    epsilon_r = sqrt(hObj.derived_values.parameters.n_sub);
+            end
+
+            % If this is a sweep then load sweep_data
+            if ~isempty(hObj.options.sweep_output_dirs)
+                out = COMSOLdFarfield(hObj.options, ...
+                    load_farfield_x(hObj.options.sweep_output_dirs_final(hObj.study_num), hObj.farfield, study_type, direction),...
+                     hObj.derived_values.parameters.freq,... 
+                     ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+            else
+                out = COMSOLdFarfield(hObj.options, ...
+                    load_farfield_x(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
+                     hObj.derived_values.parameters.freq,...
+                     ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+            end
+            
+            % Don't modify user's path
+            path(old_path);
+        end
+        
+        function out = getFarfieldy(hObj, study_type, direction)
+            % Were any farfields calcualted for this study?
+            if isempty(hObj.farfield)
+                error("COMSOLdResults.getFarfield(): No farfield in results.");
+            end
+            
+            % We don't want to modify the user's path, so store his value
+            old_path = path;
+            % Where to look for functions used, including user supplied
+            % functions.
+            for i=1:length(hObj.COMSOL_dir)
+                addpath(hObj.COMSOL_dir{i});
+            end
+            
+            switch lower(direction)
+                case "up"
+                    epsilon_r = sqrt(hObj.derived_values.parameters.n_air);
+                case "down"
+                    epsilon_r = sqrt(hObj.derived_values.parameters.n_sub);
+            end
+
+            % If this is a sweep then load sweep_data
+            if ~isempty(hObj.options.sweep_output_dirs)
+                out = COMSOLdFarfield(hObj.options, ...
+                    load_farfield_y(hObj.options.sweep_output_dirs_final(hObj.study_num), hObj.farfield, study_type, direction),...
+                     hObj.derived_values.parameters.freq,... 
+                     ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+            else
+                out = COMSOLdFarfield(hObj.options, ...
+                    load_farfield_y(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
+                     hObj.derived_values.parameters.freq,...
+                     ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+            end
+            
+            % Don't modify user's path
+            path(old_path);
+        end
+        
         
         %%
         %
