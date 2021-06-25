@@ -381,77 +381,77 @@ classdef COMSOLdFarfield < handle
         function out = getField(hObj, field)
             switch lower(field)
                 case "ex"
-                    out = squeeze(hObj.Ex(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.Ex, hObj.freq_num);
                 case "ey"
-                    out = squeeze(hObj.Ey(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.Ey, hObj.freq_num);
                 case "relex"
-                    out = squeeze(hObj.relEx(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.relEx, hObj.freq_num);
                 case "reley"
-                    out = squeeze(hObj.relEy(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.relEy, hObj.freq_num);
                 case "ebx"
-                    out = squeeze(hObj.Ebx(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.Ebx, hObj.freq_num);
                 case "eby"
-                    out = squeeze(hObj.Eby(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.Eby, hObj.freq_num);
                 case "hx"
-                    out = squeeze(hObj.Hx(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.Hx, hObj.freq_num);
                 case "hy"
-                    out = squeeze(hObj.Hy(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.Hy, hObj.freq_num);
                 case "relhx"
-                    out = squeeze(hObj.relHx(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.relHx, hObj.freq_num);
                 case "relhy"
-                    out = squeeze(hObj.relHy(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.relHy, hObj.freq_num);
                 case "hbx"
-                    out = squeeze(hObj.Hbx(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.Hbx, hObj.freq_num);
                 case "hby"
-                    out = squeeze(hObj.Hby(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.Hby, hObj.freq_num);
                 case "poynting"
-                    out = squeeze(hObj.Poynting(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.Poynting, hObj.freq_num);
                 case "relpoynting"
-                    out = squeeze(hObj.relPoynting(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.relPoynting, hObj.freq_num);
                 case "poyntingb"
-                    out = squeeze(hObj.Poyntingb(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.Poyntingb, hObj.freq_num);
                 case "f_ex"
-                    out = squeeze(hObj.F_Ex(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Ex, hObj.freq_num);
                 case "f_ey"
-                    out = squeeze(hObj.F_Ey(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Ey, hObj.freq_num);
                 case "f_ez"
-                    out = squeeze(hObj.F_Ez(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Ez, hObj.freq_num);
                 case "f_relex"
-                    out = squeeze(hObj.F_relEx(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_relEx, hObj.freq_num);
                 case "f_reley"
-                    out = squeeze(hObj.F_relEy(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_relEy, hObj.freq_num);
                 case "f_relez"
-                    out = squeeze(hObj.F_relEz(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_relEz, hObj.freq_num);
                 case "f_ebx"
-                    out = squeeze(hObj.F_Ebx(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Ebx, hObj.freq_num);
                 case "f_eby"
-                    out = squeeze(hObj.F_Eby(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Eby, hObj.freq_num);
                 case "f_ebz"
-                    out = squeeze(hObj.F_Ebz(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Ebz, hObj.freq_num);
                 case "f_hx"
-                    out = squeeze(hObj.F_Hx(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Hx, hObj.freq_num);
                 case "f_hy"
-                    out = squeeze(hObj.F_Hy(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Hy, hObj.freq_num);
                 case "f_hz"
-                    out = squeeze(hObj.F_Hz(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Hz, hObj.freq_num);
                 case "f_relhx"
-                    out = squeeze(hObj.F_relHx(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_relHx, hObj.freq_num);
                 case "f_relhy"
-                    out = squeeze(hObj.F_relHy(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_relHy, hObj.freq_num);
                 case "f_relhz"
-                    out = squeeze(hObj.F_relHz(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_relHz, hObj.freq_num);
                 case "f_hbx"
-                    out = squeeze(hObj.F_Hbx(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Hbx, hObj.freq_num);
                 case "f_hby"
-                    out = squeeze(hObj.F_Hby(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Hby, hObj.freq_num);
                 case "f_hbz"
-                    out = squeeze(hObj.F_Hbz(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Hbz, hObj.freq_num);
                 case "f_poynting"
-                    out = squeeze(hObj.F_Poynting(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Poynting, hObj.freq_num);
                 case "f_relpoynting"
-                    out = squeeze(hObj.F_relPoynting(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_relPoynting, hObj.freq_num);
                 case "f_poyntingb"
-                    out = squeeze(hObj.F_Poyntingb(:,:,hObj.freq_num));
+                    out = hObj.get_field(hObj.F_Poyntingb, hObj.freq_num);
                 otherwise
                     error("Unknown field: %s", field);
             end
@@ -653,6 +653,19 @@ classdef COMSOLdFarfield < handle
             hObj.F_relPoynting = squeeze(hObj.F_relPoynting(diff_order_range,diff_order_range,:));
             hObj.F_Poyntingb = squeeze(hObj.F_Poyntingb(diff_order_range,diff_order_range,:));
         
+        end
+    end
+    
+    methods  (Access='private')
+        % Check to see if the user has trimmed the fields down to a single
+        % diffraction order.
+        function out = get_field(~, field_in, freq_number)
+            n = ndims(field_in);
+            if n ==2
+                out = squeeze(field_in(freq_number));
+            else
+                out = squeeze(field_in(:,:,freq_number));
+            end
         end
     end
 end
