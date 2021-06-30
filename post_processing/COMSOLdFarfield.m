@@ -270,7 +270,12 @@ classdef COMSOLdFarfield < handle
         % How many freqs are there?
         %
         function out = numFreqs(hObj)
-            out = size(hObj.Ex, 3);
+            n = ndims(hObj.Ex);
+            if n ==2
+                out = length(hObj.Ex);
+            else
+                out = size(hObj.Ex, 3);
+            end
         end
         
         % Is there another study in the sweep?
