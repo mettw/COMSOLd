@@ -1,6 +1,9 @@
 # COMSOLd
 Daemon for controling COMSOL jobs
 
+# Prerequisites
+* allcomb function - https://au.mathworks.com/matlabcentral/fileexchange/10064-allcomb-varargin
+
 # Installation
 1) Copy the directory User_dir_example/ to wherever you want to store your job scripts and other supporting MATLAB files.  MATLAB has an online drive like OneDrive available that is a convenient place for it.
 
