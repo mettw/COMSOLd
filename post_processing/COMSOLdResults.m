@@ -132,7 +132,7 @@ classdef COMSOLdResults < handle
     % results.getParamName(num)
     % results.getAllParamNames()
     % results.getParamValue(num)
-    % results.getAllParamValues()
+    % results.getAllParamValues(num)
     %
     % OTHER METHODS
     % -------------
@@ -607,8 +607,8 @@ classdef COMSOLdResults < handle
             end
         end
         
-        function out = getAllParamValues(hObj)
-            out = hObj.sweep_data.Properties.Variables(1:hObj.getNumParams());
+        function out = getAllParamValues(hObj, num)
+            out = hObj.sweep_data.(hObj.getParamName(num));
         end
         
         function out = getParamName(hObj, num)
