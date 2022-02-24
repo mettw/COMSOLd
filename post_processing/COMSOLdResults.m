@@ -703,6 +703,21 @@ classdef COMSOLdResults < handle
             hObj.setMask(hObj.mask);
         end
 
+        % set hObj.mask to hObj.mask && extra_mask
+        function andMask(hObj, extra_mask)
+            hObj.mask = hObj.mask && extra_mask;
+            hObj.setMask(hObj.mask);
+        end
+
+        % set hObj.mask to hObj.mask && extra_mask by the value of a 
+        % parameter of the inner sweep.
+        function andMaskByValue(hObj, param_name, param_value)
+            field_names = fieldnames(hObj.derived_values)';
+            extra_mask = dv.(field_names{1}).(param_name) == param_value;
+            hObj.mask = hObj.mask && extra_mask;
+            hObj.setMask(hObj.mask);
+        end
+
         function clearMask(hObj)
             % If hObj.mask is empty then masked_derived_values is just a
             % copy of derived_values.
