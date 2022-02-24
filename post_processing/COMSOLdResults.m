@@ -168,6 +168,10 @@ classdef COMSOLdResults < handle
         
         % struct containing all of the derived values that were saved.
         derived_values;
+        % derived_values that have been masked to return only those
+        % corresponding to certain values for the inner sweep.
+        mask = [];
+        masked_derived_values;
         
         % cut planes 
         cut_planes;
@@ -256,6 +260,7 @@ classdef COMSOLdResults < handle
                     % else this is a single study.
                     tmp = load(strcat(hObj.options.output_dir_final, 'all_derived_values'));
                     hObj.derived_values = tmp.all_derived_values;
+                    hObj.setMask(hObj.mask);
                     if exist(strcat(hObj.options.output_dir_final, 'cut_planes_tbl.mat'), 'file')
                         tmp = load(strcat(hObj.options.output_dir_final, 'cut_planes_tbl'));
                         hObj.cut_planes = tmp.cut_planes_tbl;
@@ -361,6 +366,7 @@ classdef COMSOLdResults < handle
             end
             
             hObj.derived_values = hObj.sweep_data(hObj.study_num,:).DerivedValues{1};
+            hObj.setMask(hObj.mask);
             hObj.cut_planes = hObj.sweep_data(hObj.study_num,:).CutPlanes{1};
             hObj.farfield = hObj.sweep_data(hObj.study_num,:).Farfield{1};
         end
@@ -664,6 +670,48 @@ classdef COMSOLdResults < handle
             hObj.options = options_in;
         end
         
+        % set hObj.masked_derived_values to a subset of hObj.derived_values
+        % based on the value of mask
+        function setMask(hObj, mask)
+            if isempty(mask)
+                % If the mask hasn't been set to any value yet.
+                hObj.masked_derived_values = hObj.derived_values;
+            else
+                for nm = fieldnames(hObj.derived_values)'
+                    for nm2 = fieldnames(hObj.derived_values.(nm{1}))'
+                        % Don't try to mask the 'fields' field as it is of a
+                        % different size to all other fields - which should all
+                        % be of the same size as mask.
+                        if strcmp(nm2{1}, 'fields')
+                            hObj.masked_derived_values.(nm{1}).(nm2{1}) = ...
+                                hObj.derived_values.(nm{1}).(nm2{1});
+                        else
+                            hObj.masked_derived_values.(nm{1}).(nm2{1}) = ...
+                                hObj.derived_values.(nm{1}).(nm2{1})(mask);
+                        end
+                    end
+                end
+            end
+        end
+
+        % Mask derived_values by the value of a parameter of the inner
+        % sweep.
+        function setMaskByValue(hObj, param_name, param_value)
+            field_names = fieldnames(hObj.derived_values)';
+            hObj.mask = dv.(field_names{1}).(param_name) == param_value;
+
+            hObj.setMask(hObj.mask);
+        end
+
+        function clearMask(hObj)
+            % If hObj.mask is empty then masked_derived_values is just a
+            % copy of derived_values.
+            hObj.mask = [];
+            hObj.setMask(hObj.mask);
+        end
+
+
+
         %%
         %
         % Utility functions
