@@ -251,7 +251,8 @@ classdef COMSOLdResults < handle
                     hObj.options.sweep = table(ParameterName, Value);
                 end    
                 
-                if ~isempty(hObj.options.sweep_output_dirs)
+                if ~isempty(hObj.options.sweep_output_dirs)  ...
+                        && strlength(hObj.options.sweep_output_dirs) ~= 0
                     % If this is a sweep then load sweep_data
                     tmp = load(strcat(hObj.options.output_dir_final, 'sweep_data'));
                     hObj.sweep_data = tmp.sweep_data;
@@ -698,7 +699,7 @@ classdef COMSOLdResults < handle
         % sweep.
         function setMaskByValue(hObj, param_name, param_value)
             field_names = fieldnames(hObj.derived_values)';
-            hObj.mask = dv.(field_names{1}).(param_name) == param_value;
+            hObj.mask = hObj.derived_values.(field_names{1}).(param_name) == param_value;
 
             hObj.setMask(hObj.mask);
         end
@@ -713,7 +714,7 @@ classdef COMSOLdResults < handle
         % parameter of the inner sweep.
         function andMaskByValue(hObj, param_name, param_value)
             field_names = fieldnames(hObj.derived_values)';
-            extra_mask = dv.(field_names{1}).(param_name) == param_value;
+            extra_mask = hObj.derived_values.(field_names{1}).(param_name) == param_value;
             hObj.mask = hObj.mask && extra_mask;
             hObj.setMask(hObj.mask);
         end
