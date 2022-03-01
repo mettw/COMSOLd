@@ -252,7 +252,7 @@ classdef COMSOLdResults < handle
                 end    
                 
                 if ~isempty(hObj.options.sweep_output_dirs)  ...
-                        && strlength(hObj.options.sweep_output_dirs) ~= 0
+                        && strlength(hObj.options.sweep_output_dirs(1)) ~= 0
                     % If this is a sweep then load sweep_data
                     tmp = load(strcat(hObj.options.output_dir_final, 'sweep_data'));
                     hObj.sweep_data = tmp.sweep_data;
