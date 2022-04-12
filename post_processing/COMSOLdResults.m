@@ -458,6 +458,8 @@ classdef COMSOLdResults < handle
                     this_farfield = hObj.farfield.SFG;
                 case "signal"
                     this_farfield = hObj.farfield.Signal;
+                case "eig"
+                    this_farfield = hObj.farfield.Eig;
                 otherwise
                     error("COMSOLdResults.getCutPlane(): Unknown field type: %s", field);
             end
@@ -467,6 +469,10 @@ classdef COMSOLdResults < handle
                     this_farfield = this_farfield.up;
                 case "down"
                     this_farfield = this_farfield.down;
+                case "e"
+                    this_farfield = this_farfield.E;
+                case "h"
+                    this_farfield = this_farfield.H;
                 otherwise
                     error("COMSOLdResults.getCutPlane(): Unknown direction: %s", direction);
             end
@@ -503,6 +509,10 @@ classdef COMSOLdResults < handle
                     epsilon_r = sqrt(hObj.derived_values.parameters.n_air);
                 case "down"
                     epsilon_r = sqrt(hObj.derived_values.parameters.n_sub);
+                case "e"
+                    epsilon_r = sqrt(hObj.derived_values.parameters_eigenfreq.n_air);
+                case "h"
+                    epsilon_r = sqrt(hObj.derived_values.parameters_eigenfreq.n_air);
             end
 
             % If this is a sweep then load sweep_data
@@ -512,10 +522,17 @@ classdef COMSOLdResults < handle
                      hObj.derived_values.parameters.freq,... 
                      ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
             else
-                out = COMSOLdFarfield(hObj.options, ...
-                    load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
-                     hObj.derived_values.parameters.freq,...
-                     ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+                if isfield(hObj.derived_values, 'parameters' )
+                    out = COMSOLdFarfield(hObj.options, ...
+                        load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
+                         hObj.derived_values.parameters.freq,...
+                         ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+                else
+                    out = COMSOLdFarfield(hObj.options, ...
+                        load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
+                         299792458./hObj.derived_values.eigenfrequency.wavelength,...
+                         ones(size(hObj.derived_values.parameters_eigenfreq.n_air)), epsilon_r);
+                end
             end
             
             % Don't modify user's path
