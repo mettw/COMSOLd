@@ -470,9 +470,7 @@ classdef COMSOLdResults < handle
                 case "down"
                     this_farfield = this_farfield.down;
                 case "e"
-                    this_farfield = this_farfield.E;
                 case "h"
-                    this_farfield = this_farfield.H;
                 otherwise
                     error("COMSOLdResults.getCutPlane(): Unknown direction: %s", direction);
             end
