@@ -35,18 +35,6 @@ classdef COMSOLdCutPlane < handle
     %
     
     properties (SetAccess='private')
-        % where the completed job scripts are stored.
-        jobs_dir = 'C:\Users\matthew\MATLAB Drive\COMSOL\jobs\completed\';
-        
-        % Change the path temprorarily to add these directories where the
-        % function scripts are kept.
-        COMSOL_dir = {'C:\Users\matthew\MATLAB Drive\COMSOL\', ...
-            'C:\Users\matthew\MATLAB Drive\COMSOL\COMSOLd\', ...
-            'C:\Users\matthew\MATLAB\Projects\COMSOLd\utils\', ...
-            'C:\Users\matthew\MATLAB\Projects\COMSOLd\post_processing\'};
-        
-        % The options struct defined by the job script.
-        options;
        
         % Data
         x;
@@ -81,17 +69,7 @@ classdef COMSOLdCutPlane < handle
         %
         % SETUP functions
         %
-        function hObj = COMSOLdCutPlane(options, cut_plane_in, varargin)
-            % Check to see if the user is setting the jobs_dir or
-            % COMSOLd_dir variables.
-            if nargin > 2 % nargin is the total num of arguments
-                hObj.jobs_dir = varargin{1};
-                if nargin > 3
-                    hObj.COMSOL_dir = varargin{2};
-                end
-            end
-            
-            hObj.options = options;
+        function hObj = COMSOLdCutPlane(cut_plane_in)
             hObj.freq_num = 1;
             hObj.stepping_through_freqs = false;
             

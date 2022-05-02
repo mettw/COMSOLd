@@ -9,7 +9,7 @@ Daemon for controling COMSOL jobs
 
 2) Copy the file get_user_dirs_example.mlx to get_user_dirs.mlx and edit it so that your new location for the user directory is listed.  This is the list of users' directories that COMSOLd will search for jobs and support functions.  You can add more than one user directory if you want.
 
-3) Copy the file post_processing/get_COMSOL_dir_example.mlx to post_processing/get_COMSOL_dir.mlx and edit it so that it points to where the COMSOLdResults class files are stored, as well as any directories where functions they might use are stored.
+3) Copy the file post_processing/get_COMSOL_dir_example.mlx to post_processing/get_COMSOL_dir.mlx and edit it so that it points to where the COMSOLdResults class files are stored, as well as any directories where functions they might use are stored.  Similary for post_processing/get_jobs_dir_example.mlx, which points to the where COMSOLd saves your completed job scripts - ie user_dir/jobs/completed/
 
 4) Create a COMSOL model file.  Importantly, in the results node there is an 'export' sub-node that you need to populate with nodes - one for each result that you want to export.  Suppose that you have created a "Global Evaluation" called "Parameters" at
 results->Derived Values- >Parameters
