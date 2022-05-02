@@ -7,7 +7,7 @@ Daemon for controling COMSOL jobs
 # Installation
 1) Copy the directory User_dir_example/ to wherever you want to store your job scripts and other supporting MATLAB files.  MATLAB has an online drive like OneDrive available that is a convenient place for it.
 
-2) Edit the file get_user_dirs.mlx so that your new location for the user directory is listed.  This is the list of users' directories that COMSOLd will search for jobs and support functions.  You can add more than one user directory if you want.
+2) Copy the file get_user_dirs_example.mlx to get_user_dirs.mlx and edit it so that your new location for the user directory is listed.  This is the list of users' directories that COMSOLd will search for jobs and support functions.  You can add more than one user directory if you want.
 
 3) Create a COMSOL model file.  Importantly, in the results node there is an 'export' sub-node that you need to populate with nodes - one for each result that you want to export.  Suppose that you have created a "Global Evaluation" called "Parameters" at
 results->Derived Values- >Parameters

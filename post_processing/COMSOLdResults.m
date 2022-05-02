@@ -469,8 +469,8 @@ classdef COMSOLdResults < handle
                     this_farfield = this_farfield.up;
                 case "down"
                     this_farfield = this_farfield.down;
-                case "e"
-                case "h"
+                case "center"
+                    this_farfield = this_farfield.center;
                 otherwise
                     error("COMSOLdResults.getCutPlane(): Unknown direction: %s", direction);
             end
@@ -507,14 +507,16 @@ classdef COMSOLdResults < handle
                     epsilon_r = sqrt(hObj.derived_values.parameters.n_air);
                 case "down"
                     epsilon_r = sqrt(hObj.derived_values.parameters.n_sub);
-                case "e"
-                    epsilon_r = sqrt(hObj.derived_values.parameters_eigenfreq.n_air);
-                case "h"
-                    epsilon_r = sqrt(hObj.derived_values.parameters_eigenfreq.n_air);
+                case "center"
+                    epsilon_r = sqrt(hObj.derived_values.parameters_linear_std.n_air);
             end
 
             % If this is a sweep then load sweep_data
-            freq_field_name = hObj.derived_values.parameters.fields{1};
+            if isfield(hObj.derived_values, 'parameters')
+                freq_field_name = hObj.derived_values.parameters.fields{1};
+            else
+                freq_field_name = hObj.derived_values.parameters_linear_std.fields{1};
+            end
             if ~isempty(hObj.options.sweep_output_dirs)
                 out = COMSOLdFarfield(hObj.options, ...
                     load_farfield(hObj.options.sweep_output_dirs_final(hObj.study_num), hObj.farfield, study_type, direction),...
@@ -526,6 +528,11 @@ classdef COMSOLdResults < handle
                         load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
                          hObj.derived_values.parameters.(freq_field_name),...
                          ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+                elseif isfield(hObj.derived_values, 'parameters_linear_std' )
+                    out = COMSOLdFarfield(hObj.options, ...
+                        load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
+                         hObj.derived_values.parameters_linear_std.(freq_field_name),...
+                         ones(size(hObj.derived_values.parameters_linear_std.n_air)), epsilon_r);
                 else
                     out = COMSOLdFarfield(hObj.options, ...
                         load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
