@@ -158,10 +158,7 @@ classdef COMSOLdResults < handle
         
         % Change the path temprorarily to add these directories where the
         % function scripts are kept.
-        COMSOL_dir = {'C:\Users\matthew\MATLAB Drive\COMSOL\', ...
-            ... 'C:\Users\matthew\MATLAB Drive\COMSOL\COMSOLd\', ...
-            'C:\Users\matthew\MATLAB\COMSOLd\utils\', ...
-            'C:\Users\matthew\MATLAB\COMSOLd\post_processing\'};
+        COMSOL_dir;
         
         % The options struct defined by the job script.
         options;
@@ -207,6 +204,8 @@ classdef COMSOLdResults < handle
                     if nargin > 3
                         sweep_num = varargin{3};
                     end
+                else
+                    hObj.COMSOL_dir = get_COMSOL_dir;
                 end
             end
             

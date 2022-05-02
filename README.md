@@ -9,7 +9,9 @@ Daemon for controling COMSOL jobs
 
 2) Copy the file get_user_dirs_example.mlx to get_user_dirs.mlx and edit it so that your new location for the user directory is listed.  This is the list of users' directories that COMSOLd will search for jobs and support functions.  You can add more than one user directory if you want.
 
-3) Create a COMSOL model file.  Importantly, in the results node there is an 'export' sub-node that you need to populate with nodes - one for each result that you want to export.  Suppose that you have created a "Global Evaluation" called "Parameters" at
+3) Copy the file post_processing/get_COMSOL_dir_example.mlx to post_processing/get_COMSOL_dir.mlx and edit it so that it points to where the COMSOLdResults class files are stored, as well as any directories where functions they might use are stored.
+
+4) Create a COMSOL model file.  Importantly, in the results node there is an 'export' sub-node that you need to populate with nodes - one for each result that you want to export.  Suppose that you have created a "Global Evaluation" called "Parameters" at
 results->Derived Values- >Parameters
 which outputs to 
 results->Tables->tbl33
@@ -19,7 +21,7 @@ You then create a table export node like
 results->export->Parameters
 and make it point to results->Tables->Parameters.  In the option for a filename *don't* write the full path to a file, instead just write what you want the file to be called.  eg, just enter "parameters.txt".  COMSOLd will automatically save it to the correct directory.  Do this for every possible result that you might want to export, regardless of whether or not you might want to export it for some particular job.  You can alter which get exported and which don't in the jobscript.
 
-4) (i) In your user directory there is a sub-directory called jobs/ which is where you put all of the job scripts that you want to run.  They are run in order of age.  If you want to run a new script before the others in the queue then put it in the jobs/priority/ directory.  All of the scripts in that directory will be run before running those in the jobs/ directory.  When a job script is selected to run it is moved to the COMSOLd/running/ directory so that you can have more than one instance of COMSOLd running without them trying to run the same script.  When the job is successfully completed the job script is moved to the jobs/completed/ directory.
+5) (i) In your user directory there is a sub-directory called jobs/ which is where you put all of the job scripts that you want to run.  They are run in order of age.  If you want to run a new script before the others in the queue then put it in the jobs/priority/ directory.  All of the scripts in that directory will be run before running those in the jobs/ directory.  When a job script is selected to run it is moved to the COMSOLd/running/ directory so that you can have more than one instance of COMSOLd running without them trying to run the same script.  When the job is successfully completed the job script is moved to the jobs/completed/ directory.
 
    (ii) In your user directory there are some support files:
       * mph_description_auto.mlx - This is a new file, but hopefully it works well.  Once COMSOLd opens the model file it will call this file (or any other you want, it is a configurable option) to create a set of tables describing the model file that allows you to describe what changes to make and what to export.
@@ -31,4 +33,4 @@ and make it point to results->Tables->Parameters.  In the option for a filename 
 
    (iii) In the jobs directory there is a file called example_job_script.mlx which is exactly what the name suggests. Edit the directories and names to reflect the layout of your computer.
 
-5) run the script start_comsold.mlx in the MATLAB command line (If you try to run it by pressing the green arrow then it won't work).
+6) run the script start_comsold.mlx in the MATLAB command line (If you try to run it by pressing the green arrow then it won't work).
