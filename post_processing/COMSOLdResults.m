@@ -509,20 +509,41 @@ classdef COMSOLdResults < handle
                 case "down"
                     epsilon_r = sqrt(hObj.derived_values.parameters.n_sub);
                 case "center"
-                    epsilon_r = sqrt(hObj.derived_values.parameters_linear_std.n_air);
+                    if isfield(hObj.derived_values, 'parameters_eigenfreq')
+                        epsilon_r = sqrt(hObj.derived_values.parameters_eigenfreq.n_air);
+                    else
+                        epsilon_r = sqrt(hObj.derived_values.parameters_linear_std.n_air);
+                    end
             end
 
             % If this is a sweep then load sweep_data
             if isfield(hObj.derived_values, 'parameters')
                 freq_field_name = hObj.derived_values.parameters.fields{1};
+            elseif isfield(hObj.derived_values, 'parameters_eigenfreq')
+                freq_field_name = hObj.derived_values.parameters_eigenfreq.fields{1};
             else
                 freq_field_name = hObj.derived_values.parameters_linear_std.fields{1};
             end
             if ~isempty(hObj.options.sweep_output_dirs)
-                out = COMSOLdFarfield(...
-                    load_farfield(hObj.options.sweep_output_dirs_final(hObj.study_num), hObj.farfield, study_type, direction),...
-                     hObj.derived_values.parameters.(freq_field_name),... 
-                     ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+                if isfield(hObj.derived_values, 'parameters' )
+                    out = COMSOLdFarfield(...
+                        load_farfield(hObj.options.sweep_output_dirs_final(hObj.study_num), ...
+                        hObj.farfield, study_type, direction),...
+                         hObj.derived_values.parameters.(freq_field_name),... 
+                         ones(size(hObj.derived_values.parameters.n_air)), epsilon_r);
+                elseif isfield(hObj.derived_values, 'parameters_eigenfreq' )
+                    out = COMSOLdFarfield(...
+                        load_farfield(hObj.options.sweep_output_dirs_final(hObj.study_num), ...
+                        hObj.farfield, study_type, direction),...
+                         299792458./hObj.derived_values.eigenfrequency.wavelength,... 
+                         ones(size(hObj.derived_values.parameters_eigenfreq.n_air)), epsilon_r);
+                else
+                    out = COMSOLdFarfield(...
+                        load_farfield(hObj.options.sweep_output_dirs_final(hObj.study_num), ...
+                        hObj.farfield, study_type, direction),...
+                         hObj.derived_values.parameters_linear_std.(freq_field_name),... 
+                         ones(size(hObj.derived_values.parameters_linear_std.n_air)), epsilon_r);
+                end
             else
                 if isfield(hObj.derived_values, 'parameters' )
                     out = COMSOLdFarfield( ...
@@ -730,7 +751,7 @@ classdef COMSOLdResults < handle
 
         % set hObj.mask to hObj.mask && extra_mask
         function andMask(hObj, extra_mask)
-            hObj.mask = hObj.mask && extra_mask;
+            hObj.mask = hObj.mask & extra_mask;
             hObj.setMask(hObj.mask);
         end
 
@@ -739,7 +760,7 @@ classdef COMSOLdResults < handle
         function andMaskByValue(hObj, param_name, param_value)
             field_names = fieldnames(hObj.derived_values)';
             extra_mask = hObj.derived_values.(field_names{1}).(param_name) == param_value;
-            hObj.mask = hObj.mask && extra_mask;
+            hObj.mask = hObj.mask & extra_mask;
             hObj.setMask(hObj.mask);
         end
 
