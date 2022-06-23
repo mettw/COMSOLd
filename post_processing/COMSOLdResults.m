@@ -511,6 +511,8 @@ classdef COMSOLdResults < handle
                 case "center"
                     if isfield(hObj.derived_values, 'parameters_eigenfreq')
                         epsilon_r = sqrt(hObj.derived_values.parameters_eigenfreq.n_air);
+                    elseif isfield(hObj.derived_values, 'parameters_eigenfrequency')
+                        epsilon_r = sqrt(hObj.derived_values.parameters_eigenfrequency.n_air);
                     else
                         epsilon_r = sqrt(hObj.derived_values.parameters_linear_std.n_air);
                     end
@@ -521,6 +523,8 @@ classdef COMSOLdResults < handle
                 freq_field_name = hObj.derived_values.parameters.fields{1};
             elseif isfield(hObj.derived_values, 'parameters_eigenfreq')
                 freq_field_name = hObj.derived_values.parameters_eigenfreq.fields{1};
+            elseif isfield(hObj.derived_values, 'parameters_eigenfrequency')
+                freq_field_name = hObj.derived_values.parameters_eigenfrequency.fields{1};
             else
                 freq_field_name = hObj.derived_values.parameters_linear_std.fields{1};
             end
@@ -555,6 +559,11 @@ classdef COMSOLdResults < handle
                         load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
                          hObj.derived_values.parameters_linear_std.(freq_field_name),...
                          ones(size(hObj.derived_values.parameters_linear_std.n_air)), epsilon_r);
+                elseif isfield(hObj.derived_values, 'parameters_eigenfrequency' )
+                    out = COMSOLdFarfield( ...
+                        load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
+                         299792458./hObj.derived_values.eigenfrequency.wavelength_eig,...
+                         ones(size(hObj.derived_values.parameters_eigenfrequency.n_air)), epsilon_r);
                 else
                     out = COMSOLdFarfield( ...
                         load_farfield(hObj.options.output_dir_final, hObj.farfield, study_type, direction),...
