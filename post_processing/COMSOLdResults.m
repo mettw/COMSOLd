@@ -461,6 +461,8 @@ classdef COMSOLdResults < handle
                     this_farfield = hObj.farfield.Signal;
                 case "eig"
                     this_farfield = hObj.farfield.Eig;
+                case "lasing"
+                    this_farfield = hObj.farfield.Lasing;
                 otherwise
                     error("COMSOLdResults.getCutPlane(): Unknown field type: %s", field);
             end
