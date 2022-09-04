@@ -259,18 +259,23 @@ classdef COMSOLdResults < handle
                     hObj.sweep_data = tmp.sweep_data;
                     hObj.firstStudy();
                 else
+                    if isfield(hObj.options, 'optimisation_fn')
+                        output_dir = hObj.options.output_dir;
+                    else 
+                        output_dir = hObj.options.output_dir_final;
+                    end
                     % else this is a single study.
-                    tmp = load(strcat(hObj.options.output_dir_final, 'all_derived_values'));
+                    tmp = load(strcat(output_dir, 'all_derived_values'));
                     hObj.derived_values = tmp.all_derived_values;
                     hObj.setMask(hObj.mask);
-                    if exist(strcat(hObj.options.output_dir_final, 'cut_planes_tbl.mat'), 'file')
-                        tmp = load(strcat(hObj.options.output_dir_final, 'cut_planes_tbl'));
+                    if exist(strcat(output_dir, 'cut_planes_tbl.mat'), 'file')
+                        tmp = load(strcat(output_dir, 'cut_planes_tbl'));
                         hObj.cut_planes = tmp.cut_planes_tbl;
                     else
                         hObj.cut_planes = [];
                     end
-                    if exist(strcat(hObj.options.output_dir_final, 'all_farfields.mat'), 'file')
-                        tmp = load(strcat(hObj.options.output_dir_final, 'all_farfields'));
+                    if exist(strcat(output_dir, 'all_farfields.mat'), 'file')
+                        tmp = load(strcat(output_dir, 'all_farfields'));
                         hObj.farfield = tmp.all_farfields;
                     else
                         hObj.farfield = [];
