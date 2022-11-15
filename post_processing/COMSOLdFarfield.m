@@ -602,7 +602,12 @@ classdef COMSOLdFarfield < handle
         % it would be from the data.
         function trimFarfield(hObj, max_diffraction_order)
             
-            zeroth_order_ind = size(hObj.Ex, 1)/2+1;
+            size_x = size(hObj.Ex, 1);
+            if mod(size_x,2) == 1
+                zeroth_order_ind = (size_x-1)/2+1;
+            else
+                zeroth_order_ind = size_x/2+1;
+            end
             diff_order_range = (zeroth_order_ind-max_diffraction_order:zeroth_order_ind+max_diffraction_order);
             
             % We squeeze the fields in case the user requests only the

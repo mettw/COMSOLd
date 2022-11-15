@@ -485,7 +485,12 @@ classdef COMSOLdResults < handle
 
             % If it is not a sweep study
             if isempty(hObj.options.sweep_output_dirs)
-                cut_planes_tmp = load_cut_planes(hObj.options.output_dir_final, this_farfield.CutPlanes);
+                if isfield(hObj.options, 'optimisation_fn')
+                    output_dir = hObj.options.output_dir;
+                else
+                    output_dir = hObj.options.output_dir_final;
+                end
+                cut_planes_tmp = load_cut_planes(output_dir, this_farfield.CutPlanes);
             else
                 cut_planes_tmp = load_cut_planes(hObj.options.sweep_output_dirs_final(hObj.study_num), this_farfield.CutPlanes);
             end
