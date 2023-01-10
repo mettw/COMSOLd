@@ -364,7 +364,7 @@ classdef COMSOLdCutPlane < handle
             out.setMask(mask);
         end
 
-        function setMask(hObj)
+        function setMask(hObj, mask)
             if ~isempty(hObj.Ex)
                 hObj.Ex = hObj.Ex(:,:,mask);
             end
