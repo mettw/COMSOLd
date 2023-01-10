@@ -358,6 +358,62 @@ classdef COMSOLdCutPlane < handle
                     error("Unknown field: %s", field);
             end
         end
+
+        function out = createMaskedCutPlane(hObj, mask)
+            out = hObj;
+            out.setMask(mask);
+        end
+
+        function setMask(hObj)
+            if ~isempty(hObj.Ex)
+                hObj.Ex = hObj.Ex(:,:,mask);
+            end
+            if ~isempty(hObj.Ey)
+                hObj.Ey = hObj.Ey(:,:,mask);
+            end
+            if ~isempty(hObj.Ez)
+                hObj.Ez = hObj.Ez(:,:,mask);
+            end
+            if ~isempty(hObj.relEx)
+                hObj.relEx = hObj.relEx(:,:,mask);
+            end
+            if ~isempty(hObj.relEy)
+                hObj.relEy = hObj.relEy(:,:,mask);
+            end
+            if ~isempty(hObj.relEz)
+                hObj.relEz = hObj.relEz(:,:,mask);
+            end
+            if ~isempty(hObj.Hx)
+                hObj.Hx = hObj.Hx(:,:,mask);
+            end
+            if ~isempty(hObj.Hy)
+                hObj.Hy = hObj.Hy(:,:,mask);
+            end
+            if ~isempty(hObj.Hz)
+                hObj.Hz = hObj.Hz(:,:,mask);
+            end
+            if ~isempty(hObj.relHx)
+                hObj.relHx = hObj.relHx(:,:,mask);
+            end
+            if ~isempty(hObj.relHy)
+                hObj.relHy = hObj.relHy(:,:,mask);
+            end
+            if ~isempty(hObj.relHz)
+                hObj.relHz = hObj.relHz(:,:,mask);
+            end
+            if ~isempty(hObj.Poynting)
+                hObj.Poynting = hObj.Poynting(:,:,mask);
+            end
+            if ~isempty(hObj.relPoynting)
+                hObj.relPoynting = hObj.relPoynting(:,:,mask);
+            end
+
+            % Which frequency are we looking at
+            hObj.freq_num = 1;
+
+            % Whether we are stepping through frequencies
+            hObj.stepping_through_freqs = false;
+        end
     end
 end
 
