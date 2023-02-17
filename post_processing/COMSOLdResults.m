@@ -6,7 +6,7 @@ classdef COMSOLdResults < handle
     % when requested by the user.  This object is designed to make
     % accessing all of this data as convenient as possible.
     %
-    % To use this you first need to change the properties:
+    % To use this you first need to change the properties:getcut
     %
     % jobs_dir      Where completed job scripts are stored on your
     %               computer.  All subdirectories of this one are searched
@@ -468,6 +468,8 @@ classdef COMSOLdResults < handle
                     this_farfield = hObj.farfield.Eig;
                 case "lasing"
                     this_farfield = hObj.farfield.Lasing;
+                case "n"
+                    this_farfield = hObj.farfield.n;
                 otherwise
                     error("COMSOLdResults.getCutPlane(): Unknown field type: %s", field);
             end
