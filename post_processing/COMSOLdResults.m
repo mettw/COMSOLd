@@ -468,10 +468,8 @@ classdef COMSOLdResults < handle
                     this_farfield = hObj.farfield.Eig;
                 case "lasing"
                     this_farfield = hObj.farfield.Lasing;
-                case "n"
-                    this_farfield = hObj.farfield.n;
                 otherwise
-                    error("COMSOLdResults.getCutPlane(): Unknown field type: %s", field);
+                    error("COMSOLdResults.getCutPlane(): Unknown field type: %s (perhaps use getScalarCutPlane())", field);
             end
 
             switch lower(direction)
@@ -503,6 +501,56 @@ classdef COMSOLdResults < handle
             path(old_path);
         end
         
+        function out = getScalarCutPlane(hObj, field, direction)
+            % Were any farfields calcualted for this study?
+            if isempty(hObj.cut_planes)
+                error("COMSOLdResults.getScalarCutPlane(): No cut planes in results.");
+            end
+            
+            % We don't want to modify the user's path, so store his value
+            old_path = path;
+            % Where to look for functions used, including user supplied
+            % functions.
+            for i=1:length(hObj.COMSOL_dir)
+                addpath(hObj.COMSOL_dir{i});
+            end
+            
+            switch lower(field)
+                case "n"
+                    this_farfield = hObj.farfield.n;
+                otherwise
+                    error("COMSOLdResults.getScalarCutPlane(): Unknown field type: %s (perhaps use getCutPlane())", field);
+            end
+
+            switch lower(direction)
+                case "up"
+                    this_farfield = this_farfield.up;
+                case "down"
+                    this_farfield = this_farfield.down;
+                case "center"
+                    this_farfield = this_farfield.center;
+                otherwise
+                    error("COMSOLdResults.getScalarCutPlane(): Unknown direction: %s", direction);
+            end
+
+            % If it is not a sweep study
+            if isempty(hObj.options.sweep_output_dirs)
+                if isfield(hObj.options, 'optimisation_fn')
+                    output_dir = hObj.options.output_dir;
+                else
+                    output_dir = hObj.options.output_dir_final;
+                end
+                cut_planes_tmp = load_cut_planes(output_dir, this_farfield.CutPlanes);
+            else
+                cut_planes_tmp = load_cut_planes(hObj.options.sweep_output_dirs_final(hObj.study_num), this_farfield.CutPlanes);
+            end
+            
+            out = COMSOLdScalarCutPlane(cut_planes_tmp);
+            
+            % Don't modify user's path
+            path(old_path);
+        end
+
         function out = getFarfield(hObj, study_type, direction)
             % Were any farfields calcualted for this study?
             if isempty(hObj.farfield)
