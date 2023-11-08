@@ -551,7 +551,7 @@ classdef COMSOLdResults < handle
             path(old_path);
         end
 
-        function out = getFarfield(hObj, study_type, direction)
+        function out = getFarfield_orig(hObj, study_type, direction)
             % Were any farfields calcualted for this study?
             if isempty(hObj.farfield)
                 error("COMSOLdResults.getFarfield(): No farfield in results.");
@@ -632,6 +632,36 @@ classdef COMSOLdResults < handle
                          299792458./hObj.derived_values.eigenfrequency.wavelength,...
                          ones(size(hObj.derived_values.parameters_eigenfreq.n_air)), epsilon_r);
                 end
+            end
+            
+            % Don't modify user's path
+            path(old_path);
+        end
+        
+        % farfield_name is a cell array of struct fields giving the
+        % heirarchy to the farfield.  eg: {"SHG", "down"} goes to SHG.down
+        function out = getFarfield(hObj, farfield_name, freqs, epsilon_r, mu_r, theta, phi)
+            % Were any farfields calcualted for this study?
+            if isempty(hObj.farfield)
+                error("COMSOLdResults.getFarfield(): No farfield in results.");
+            end
+            
+            % We don't want to modify the user's path, so store his value
+            old_path = path;
+            % Where to look for functions used, including user supplied
+            % functions.
+            for i=1:length(hObj.COMSOL_dir)
+                addpath(hObj.COMSOL_dir{i});
+            end
+            
+            if ~isempty(hObj.options.sweep_output_dirs)
+                out = COMSOLdFarfield(...
+                    load_farfield_v2(hObj.options.sweep_output_dirs_final(hObj.study_num), ...
+                    hObj.farfield, farfield_name, freqs, theta, phi), freqs, mu_r, epsilon_r);
+            else
+                out = COMSOLdFarfield( ...
+                    load_farfield_v2(hObj.options.output_dir_final, hObj.farfield, farfield_name, ...
+                    freqs, theta, phi), freqs, mu_r, epsilon_r);
             end
             
             % Don't modify user's path
