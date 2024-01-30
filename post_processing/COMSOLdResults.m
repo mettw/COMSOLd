@@ -6,13 +6,16 @@ classdef COMSOLdResults < handle
     % when requested by the user.  This object is designed to make
     % accessing all of this data as convenient as possible.
     %
-    % To use this you first need to change the properties:getcut
+    % To use this you first need to copy the files get_jobs_dir_example.m
+    % and get_COMSOL_dir_example.m to get_jobs_dir.m and get_COMSOL_dir.m
+    % respectively and edit their contents to reflect the layout of your
+    % computer:
     %
-    % jobs_dir      Where completed job scripts are stored on your
-    %               computer.  All subdirectories of this one are searched
-    %               for the job script.
-    % COMSOL_dir    All of the directories where these class files are, as
-    %               well as any functions that they use.
+    % get_jobs_dir      Where completed job scripts are stored on your
+    %                   computer.  All subdirectories of this one are 
+    %                   searched for the job script.
+    % get_COMSOL_dir    All of the directories where these class files 
+    %                   are, as well as any functions that they use.
     %
     % You then create a results object with
     %
