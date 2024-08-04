@@ -446,7 +446,15 @@ classdef COMSOLdResults < handle
             end
         end
         
+        function out = getCutPlane3D(hObj, field, direction)
+            out = hObj.getCutPlane_internal(field, direction, true);
+        end
+
         function out = getCutPlane(hObj, field, direction)
+            out = hObj.getCutPlane_internal(field, direction, false);
+        end
+
+        function out = getCutPlane_internal(hObj, field, direction, is3D)
             % Were any farfields calcualted for this study?
             if isempty(hObj.cut_planes)
                 error("COMSOLdResults.getCutPlane(): No cut planes in results.");
@@ -493,12 +501,26 @@ classdef COMSOLdResults < handle
                 else
                     output_dir = hObj.options.output_dir_final;
                 end
-                cut_planes_tmp = load_cut_planes(output_dir, this_farfield.CutPlanes);
+                if is3D
+                    cut_planes_tmp = load_cut_planes3D(output_dir, this_farfield.CutPlanes);
+                else
+                    cut_planes_tmp = load_cut_planes(output_dir, this_farfield.CutPlanes);
+                end
             else
-                cut_planes_tmp = load_cut_planes(hObj.options.sweep_output_dirs_final(hObj.study_num), this_farfield.CutPlanes);
+                if is3D
+                    cut_planes_tmp = load_cut_planes3D(hObj.options.sweep_output_dirs_final(hObj.study_num), ...
+                        this_farfield.CutPlanes);
+                else
+                    cut_planes_tmp = load_cut_planes(hObj.options.sweep_output_dirs_final(hObj.study_num), ...
+                        this_farfield.CutPlanes);
+                end
             end
             
-            out = COMSOLdCutPlane(cut_planes_tmp);
+            if is3D
+                out = COMSOLdCutPlane3D(cut_planes_tmp);
+            else
+                out = COMSOLdCutPlane(cut_planes_tmp);
+            end
             
             % Don't modify user's path
             path(old_path);
