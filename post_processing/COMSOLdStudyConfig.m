@@ -34,6 +34,9 @@ classdef COMSOLdStudyConfig < handle
         design % "waveguide_thin" etc
         study % "M_Gamma_X_10deg", "M_Gamma_X_2deg", etc
 
+        job; % name of the job that is passed to the COMSOLdResults 
+             % constructor.
+
         options % Extra options to be passed to the plotting functions etc
     end
 
@@ -52,6 +55,15 @@ classdef COMSOLdStudyConfig < handle
 
             % Set the other properties in the object
             run(obj.project_config_file);
+        end
+
+        function newObj = copy(obj)
+            newObj = COMSOLdStudyConfig(obj.project);
+            newObj.set_design_type(obj.design_type);
+            newObj.set_study_type(obj.study_type);
+            newObj.set_design(obj.design);
+            newObj.set_study(obj.study);
+            newObj.set_more_options(obj.options);
         end
 
         function out = get_available_design_types(obj)
@@ -93,11 +105,32 @@ classdef COMSOLdStudyConfig < handle
                 options.(fld{1}) = options_tmp.(fld{1});
             end
             obj.options = options;
+            if ~isfield(options, 'job') || ~isstring(options.job)
+                error(strcat("COMSOLdStudyConfig.set_more_options(options): ", ...
+                    "There must be a field options.job that is a string.\nIt ", ...
+                    "should be the name of the job file for the COMSOLdResults ", ...
+                    "constructor."));
+            end
+            obj.job = obj.options.job;
             
             options.design_type = obj.design_type;
             options.study_type = obj.study_type;
             options.design = obj.design;
             options.study = obj.study;
+        end
+
+        function set_job(obj, new_job)
+            if ~isstring(new_job)
+                error("COMSOLdStudyConfig.set_job(new_job): new_job must be a string.");
+            end
+
+            if isempty(obj.options)
+                error(strcat("COMSOLdStudyConfig.set_job(new_job): Must call ", ...
+                    "set_more_options() method first\nto set options property."));
+            end
+
+            obj.options.job = new_job;
+            obj.job = new_job;
         end
 
         % used by the constructor to add the config for another study that
