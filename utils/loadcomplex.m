@@ -1,3 +1,5 @@
+% Like the load() function, but it also handles complex numbers.
+% {
 function out = loadcomplex(fname)
     % Open file
     [fd, errmsg] = fopen(fname, 'r');
@@ -40,17 +42,47 @@ function out = loadcomplex(fname)
         data = cell2mat(textscan(cur_line, '%f'));
         if ~isempty(data)
             out(line_idx, :) = data';
+            line_idx = line_idx + 1;
         end
         cur_line = fgets(fd);
-        line_idx = line_idx + 1;
     end
     
+    % Convert -0 to 0
+    out(out == 0) = 0;
+
+    % Convert very small values to zero 
+
+    % Calculate mean and standard deviation
+    x = log10(abs(out(:,1)));
+    x(isinf(x)) = 0; % 0 goes to Inf with log10()
+    mean_x = mean(x);
+    std_x = std(x);
+    
+    % Define the threshold for exclusion (5 standard deviations)
+    threshold = mean_x - 5 * std_x;
+    
+    % Exclude values that are more than 5 standard deviations from the mean
+    out(x<=threshold,1) = 0;
+
+    % Calculate mean and standard deviation
+    x = log10(abs(out(:,2)));
+    x(isinf(x)) = 0; % 0 goes to Inf with log10()
+    mean_x = mean(x);
+    std_x = std(x);
+    
+    % Define the threshold for exclusion (5 standard deviations)
+    threshold = mean_x - 5 * std_x;
+    
+    % Exclude values that are more than 5 standard deviations from the mean
+    out(x<=threshold,2) = 0;
+
     % Close file
     close_status = fclose(fd);
     if close_status == -1
         warning('loadcomplex: Error while closing file.\n');
     end
 end
+%}
 %{
 % Like the load() function, but it also handles complex numbers.
 
