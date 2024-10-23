@@ -151,7 +151,7 @@ classdef COMSOLdCutPlane3D < handle
                     hObj.relHz = zeros(size(hObj.Hz));
                 end
 
-                for i=1:size(hObj.Ex, 3)
+                for i=1:size(hObj.Ex, 4)
                     ffex = squeeze(hObj.Ex(:,:,:,i));
                     ffey = squeeze(hObj.Ey(:,:,:,i));
                     ffhx = squeeze(hObj.Hx(:,:,:,i));

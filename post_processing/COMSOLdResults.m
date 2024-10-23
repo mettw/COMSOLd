@@ -543,6 +543,8 @@ classdef COMSOLdResults < handle
             switch lower(field)
                 case "n"
                     this_farfield = hObj.farfield.n;
+                case "eps"
+                    this_farfield = hObj.farfield.eps;
                 otherwise
                     error("COMSOLdResults.getScalarCutPlane(): Unknown field type: %s (perhaps use getCutPlane())", field);
             end
